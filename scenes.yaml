@@ -1,0 +1,16 @@
+- id: "1599934887432"
+  name: TV kijken
+  entities:
+    light.sfeer_haard:
+      friendly_name: Sfeer haard
+      state: "off"
+      supported_features: 41
+    light.sfeer_tv_links:
+      friendly_name: Sfeer tv links
+      state: "off"
+      supported_features: 41
+    light.sfeer_tv_rechts:
+      friendly_name: Sfeer tv rechts
+      state: "off"
+      supported_features: 41
+  icon: mdi:television-classic

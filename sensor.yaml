@@ -1,0 +1,32 @@
+- platform: buienalarm
+  timeframe: 30
+# name: buienalarm
+  monitored_conditions:
+  - temperature
+  - precipitation
+  - precipitation_forecast_average
+  - precipitation_forecast_total
+  - next_rain_forecast
+
+- platform: afvalinfo
+  resources:
+    - pbd
+    - gft
+    - papier
+    - trash_type_today
+    - trash_type_tomorrow
+  location: !secret afvalinfo_location
+  postcode: !secret afvalinfo_postcode
+  streetnumber: !secret afvalinfo_streetnumber
+  dateformat: '%d-%m-%Y'
+  locale: 'nl'
+  timespanindays: 365
+
+- platform: enphase_envoy
+  ip_address: !secret enphase_envoy_ip_address
+  monitored_conditions:
+    - production
+    - daily_production
+    - seven_days_production
+    - lifetime_production
+    - inverters

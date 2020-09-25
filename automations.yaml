@@ -1,0 +1,135 @@
+- id: '1599855353365'
+  alias: Notify me when it's going to rain and windows are open
+  description: ''
+  trigger:
+  - above: -1
+    below: 180
+    entity_id: sensor.ba_next_rain_forecast
+    platform: numeric_state
+  condition:
+  - condition: device
+    device_id: 5921511ff46740bc813069a1cd7f8519
+    domain: binary_sensor
+    entity_id: binary_sensor.ewelink_ds01_9c53901f_ias_zone
+    type: is_open
+  action:
+  - data:
+      message: Het gaat zo regenen en er staan nog ramen open!
+    service: notify.notify
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.woonkamer
+      message: Het gaat zo regenen en het dakraam staat nog open!
+      language: nl
+  mode: single
+- id: '1599935349866'
+  alias: Activate TV kijken when Shield is playing
+  description: ''
+  trigger:
+  - entity_id: media_player.shield
+    from: idle
+    platform: state
+    to: playing
+  - entity_id: media_player.shield
+    from: unknown
+    platform: state
+    to: playing
+  - entity_id: media_player.shield
+    from: 'off'
+    platform: state
+    to: playing
+  condition:
+  - condition: device
+    device_id: 52f0e75c801c4b7597a615f57f235937
+    domain: light
+    entity_id: light.woonkamer_1_van_6
+    type: is_on
+  action:
+  - scene: scene.tv_kijken
+  mode: single
+- id: '1600866613785'
+  alias: Sfeer lampen on when Shield stops or pauzes playing
+  description: ''
+  trigger:
+  - entity_id: media_player.shield
+    from: playing
+    platform: state
+    to: idle
+  - entity_id: media_player.shield
+    from: playing
+    platform: state
+    to: unknown
+  - entity_id: media_player.shield
+    from: playing
+    platform: state
+    to: 'off'
+  condition:
+  - condition: device
+    device_id: 52f0e75c801c4b7597a615f57f235937
+    domain: light
+    entity_id: light.woonkamer_1_van_6
+    type: is_on
+  action:
+  - brightness_pct: 30
+    device_id: eed5abaaa50c4891a00b3bca1b03dc38
+    domain: light
+    entity_id: light.sfeer_tv_links
+    type: turn_on
+  - brightness_pct: 30
+    device_id: 8aa46939374c44b288dc723db2243209
+    domain: light
+    entity_id: light.sfeer_tv_rechts
+    type: turn_on
+  - brightness_pct: 30
+    device_id: d9daa905d8b7475fb29081816b7c647e
+    domain: light
+    entity_id: light.sfeer_haard
+    type: turn_on
+  mode: single
+- id: '1601035843009'
+  alias: Turn on lights overloop when motion detected
+  description: ''
+  trigger:
+  - device_id: d18c3efeb19f4c209c250a5a9339828f
+    domain: binary_sensor
+    entity_id: binary_sensor.lumi_lumi_sensor_motion_c0714405_ias_zone
+    platform: device
+    type: motion
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - choose:
+    - conditions:
+      - after: '22:30'
+        condition: time
+      sequence:
+      - brightness_pct: 5
+        device_id: bf05d7a36704482d80ed0da986381849
+        domain: light
+        entity_id: light.overloop
+        type: turn_on
+    default:
+    - brightness_pct: 30
+      device_id: bf05d7a36704482d80ed0da986381849
+      domain: light
+      entity_id: light.overloop
+      type: turn_on
+  mode: single
+- id: '1601036052890'
+  alias: Turn off light when no motion detected overloop
+  description: ''
+  trigger:
+  - device_id: d18c3efeb19f4c209c250a5a9339828f
+    domain: binary_sensor
+    entity_id: binary_sensor.lumi_lumi_sensor_motion_c0714405_ias_zone
+    platform: device
+    type: no_motion
+  condition: []
+  action:
+  - device_id: bf05d7a36704482d80ed0da986381849
+    domain: light
+    entity_id: light.overloop
+    type: turn_off
+  mode: single
